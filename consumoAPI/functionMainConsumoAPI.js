@@ -4,9 +4,9 @@ function fetchAllPedidosFromMiddleware() {
     Logger.log("Erro: Não foi possível obter a planilha ativa.");
     return;
   }
-  
+
   const API_BASE_URL = "https://api.sigecloud.com.br/request/Pedidos/GetTodosPedidos?page=1";
-  
+
   const params = {
     method: "GET",
     headers: {
@@ -19,10 +19,32 @@ function fetchAllPedidosFromMiddleware() {
     muteHttpExceptions: true
   };
 
-  const headers = ["ID", "DataEnvio", "Cliente", "ClienteCNPJ", "Codigo", "Descricao","ValorTotal", "Categoria", "Empresa", "ValorFinal", "StatusSistema"];
-  sheet.appendRow(headers);
-  formatHeaders(sheet, headers.length);  
-  fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers);
+  const headers = ["ID", "DataEnvio", "Cliente", "ClienteCNPJ", "Codigo", "Descricao", "ValorTotal", "Categoria", "Empresa", "ValorFinal", "StatusSistema"];
   
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(headers);
+    formatHeaders(sheet, headers.length);
+  }
+
+  fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers);
   Logger.log("Importação de pedidos concluída com sucesso!");
+}
+
+function formatHeaders(sheet, columnCount) {
+  if (!sheet) {
+    Logger.log("Erro: A planilha fornecida para formatar os cabeçalhos é indefinida.");
+    return;
+  }
+  sheet.getRange(1, 1, 1, columnCount)
+    .setFontWeight("bold")
+    .setBackground("#D3D3D3");
+}
+
+function isValidJSONString(str) {
+  try {
+    JSON.parse(str);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }

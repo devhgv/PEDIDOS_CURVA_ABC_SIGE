@@ -1,16 +1,17 @@
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
-  ui.createMenu("Menu")
-    .addItem("Atualizar", "fetchAllPedidosFromMiddleware")  // Atualizar dados com novos pedidos
-    .addItem("Sobre", "showAbout")
+  ui.createMenu('Menu') 
+    .addItem('Atualizar', 'updatePedidos')  
+    .addItem('Sobre', 'showAbout')  
     .addToUi();
+}
+
+function updatePedidos() {
+  fetchAllPedidosFromMiddleware();
 }
 
 function showAbout() {
   const ui = SpreadsheetApp.getUi();
-  ui.alert(
-    "Sobre",
-    "Este metódo exibe os pedidos do sistema. Utilize o Botão 'Atualizar' para carregar os pedidos mais recentes dos últimos meses.",
-    ui.ButtonSet.OK
-  );
+  const message = `Este módulo consome da API de pedidos da Portoreal, para criação de gráficos da Curva ABC/ABCD.`;
+  ui.alert('Sobre o Sistema', message, ui.ButtonSet.OK);
 }

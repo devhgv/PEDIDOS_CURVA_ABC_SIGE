@@ -1,4 +1,4 @@
-function onOpen() {
+function onOpenGraph() {
   const ui = SpreadsheetApp.getUi();
 
   // Adiciona o menu principal para gráficos

@@ -2,6 +2,12 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
   let currentPage = getLastPage();  // Obtém a última página salva
   const pageSize = 100; // Ajuste o tamanho da página conforme necessário
 
+  // Verifica se os cabeçalhos já existem, evitando duplicação
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(headers);
+    formatHeaders(sheet, headers.length);
+  }
+
   while (true) {
     try {
       const response = UrlFetchApp.fetch(`${API_BASE_URL}&page=${currentPage}`, params);
@@ -27,18 +33,16 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
       }
 
       pedidos.forEach((pedido) => {
-        // Verifica se existem itens no pedido
         if (pedido.Items && Array.isArray(pedido.Items)) {
           pedido.Items.forEach((item) => {
-            // Adiciona uma linha para cada item no pedido
             sheet.appendRow([
               pedido.ID || "N/A",
               pedido.DataEnvio || "N/A",
               pedido.Cliente || "N/A",
               pedido.ClienteCNPJ || "N/A",
-              item.Codigo || "N/A",     
+              item.Codigo || "N/A",
               item.Descricao || "N/A",
-              item.ValorTotal || 0,   
+              item.ValorTotal || 0,
               pedido.Categoria || "N/A",
               pedido.Empresa || "N/A",
               pedido.ValorFinal || 0,
@@ -46,7 +50,6 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
             ]);
           });
         } else {
-          // Caso não existam itens, adiciona uma linha com dados básicos
           sheet.appendRow([
             pedido.ID || "N/A",
             pedido.DataEnvio || "N/A",
@@ -62,9 +65,8 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
         }
       });
 
-      // Salva o progresso (número da página atual)
+      Logger.log(`Consumindo página ${currentPage}`);
       saveProgress(currentPage);
-
       currentPage++;
 
       // Se a página retornada não tiver pedidos, significa que não há mais dados para processar
@@ -79,17 +81,4 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
 
   // Auto ajuste das colunas
   sheet.autoResizeColumns(1, headers.length);
-}
-
-// Função para salvar o progresso (última página visitada)
-function saveProgress(page) {
-  const scriptProperties = PropertiesService.getScriptProperties();
-  scriptProperties.setProperty('lastPage', page.toString());  // Armazena a última página
-}
-
-// Função para obter a última página salva
-function getLastPage() {
-  const scriptProperties = PropertiesService.getScriptProperties();
-  const lastPage = scriptProperties.getProperty('lastPage');
-  return lastPage ? parseInt(lastPage) : 1;  // Se não houver progresso salvo, começa na página 1
 }
