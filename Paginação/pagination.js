@@ -1,11 +1,11 @@
 function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
   let currentPage = getLastPage();  
-  const pageSize = 100; // Ajuste o tamanho da página conforme necessário
+  const pageSize = 1; // Ajuste o tamanho da página conforme necessário
 
   while (true) {
     try {
       // Constrói a URL com base na página atual
-      const url = `${API_BASE_URL}?page=${currentPage}`;
+      const url = `${API_BASE_URL}?page=${currentPage}`;  
       Logger.log("Requisitando dados da URL: " + url);
 
       // Faz a requisição
@@ -36,39 +36,42 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
 
       // Processa os dados dos pedidos
       pedidos.forEach((pedido) => {
+        Logger.log("Buscando Dados dos Pedidos (...) ");
         if (pedido.Items && Array.isArray(pedido.Items)) {
           pedido.Items.forEach((item) => {
-            sheet.appendRow([
-              pedido.ID || "N/A",
-              pedido.DataEnvio || "N/A",
-              pedido.Cliente || "N/A",
-              pedido.ClienteCNPJ || "N/A",
-              item.Codigo || "N/A",
-              item.Descricao || "N/A",
-              item.ValorTotal || 0,
-              pedido.Categoria || "N/A",
-              pedido.Empresa || "N/A",
-              pedido.ValorFinal || 0,
+
+            const itemJson = JSON.stringify(item); //Transforma Itens em JSON
+            
+            sheet.appendRow([ 
+              pedido.ID || "N/A", 
+              pedido.DataEnvio || "N/A", 
+              pedido.Cliente || "N/A", 
+              pedido.ClienteCNPJ || "N/A", 
+              itemJson.Item,
+              pedido.Categoria || "N/A", 
+              pedido.Empresa || "N/A", 
+              pedido.ValorFinal || 0, 
               pedido.StatusSistema || "N/A"
             ]);
           });
         } else {
-          sheet.appendRow([
-            pedido.ID || "N/A",
-            pedido.DataEnvio || "N/A",
-            pedido.Cliente || "N/A",
-            pedido.ClienteCNPJ || "N/A",
-            "Sem Código",
-            "Sem Descrição",
-            pedido.Categoria || "N/A",
-            pedido.Empresa || "N/A",
-            pedido.ValorFinal || 0,
+          sheet.appendRow([ 
+            pedido.ID || "N/A", 
+            pedido.DataEnvio || "N/A", 
+            pedido.Cliente || "N/A", 
+            pedido.ClienteCNPJ || "N/A", 
+            "Sem Código", 
+            "Sem Descrição", 
+            pedido.Categoria || "N/A", 
+            pedido.Empresa || "N/A", 
+            pedido.ValorFinal || 0, 
             pedido.StatusSistema || "N/A"
           ]);
         }
       });
 
       // Salva o progresso
+      Logger.log("Página atual: " + currentPage);
       saveProgress(currentPage);
       currentPage++;
 
@@ -80,7 +83,7 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
 
       // Verifica tempo restante
       if (Session.getScriptTimeRemaining() < 30) {
-        Logger.log("Tempo quase esgotado. Salvando progresso na página " + currentPage);
+        Logger.log("Resta 30s para o tempo se esgotar. Salvando progresso na página " + currentPage);
         saveProgress(currentPage);
         break;
       }

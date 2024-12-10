@@ -13,7 +13,7 @@ function getLastPage() {
   const lastPage = PropertiesService.getScriptProperties().getProperty('LAST_PAGE');
   if (lastPage !== null) {
     Logger.log("Progresso recuperado: Página " + lastPage);
-    return parseInt(lastPage, 10); 
+    return Number(lastPage); 
   } else {
     Logger.log("Nenhum progresso encontrado. Começando pela página 1.");
     return 1;  // Se não houver um valor salvo, começa pela página 1

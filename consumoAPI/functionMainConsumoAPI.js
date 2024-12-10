@@ -19,7 +19,7 @@ function fetchAllPedidosFromMiddleware() {
     muteHttpExceptions: true
   };
 
-  const headers = ["ID", "DataEnvio", "Cliente", "ClienteCNPJ", "Codigo", "Descricao", "ValorTotal", "Categoria", "Empresa", "ValorFinal", "StatusSistema"];
+  const headers = ["ID", "DataEnvio", "Cliente", "ClienteCNPJ", "Item", "Categoria", "Empresa", "ValorFinal", "StatusSistema"];
   
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(headers);
