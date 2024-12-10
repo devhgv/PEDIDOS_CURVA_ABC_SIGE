@@ -5,7 +5,7 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
   while (true) {
     try {
       // Constrói a URL com base na página atual
-      const url = `${API_BASE_URL}&page=${currentPage}`;
+      const url = `${API_BASE_URL}?page=${currentPage}`;
       Logger.log("Requisitando dados da URL: " + url);
 
       // Faz a requisição
