@@ -1,6 +1,6 @@
 function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
-  let currentPage = getLastPage();  
-  const pageSize = 1; // Ajuste o tamanho da página conforme necessário
+  let currentPage = 1;
+  const pageSize = 100; // Ajuste o tamanho da página conforme necessário
 
   while (true) {
     try {
@@ -47,7 +47,7 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
               pedido.DataEnvio || "N/A", 
               pedido.Cliente || "N/A", 
               pedido.ClienteCNPJ || "N/A", 
-              itemJson.Item,
+              itemJson,
               pedido.Categoria || "N/A", 
               pedido.Empresa || "N/A", 
               pedido.ValorFinal || 0, 
