@@ -5,7 +5,7 @@ function fetchAllPedidosFromMiddleware() {
     return;
   }
 
-  const API_BASE_URL = "https://api.sigecloud.com.br/request/Pedidos/GetTodosPedidos?page=1";
+  const API_BASE_URL = "https://api.sigecloud.com.br/request/Pedidos/GetTodosPedidos?page=11";
 
   const params = {
     method: "GET",

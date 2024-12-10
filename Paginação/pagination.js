@@ -1,5 +1,5 @@
 function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
-  let currentPage = getLastPage();  // Obtém a última página salva
+  let currentPage = getLastPage();  
   const pageSize = 100; // Ajuste o tamanho da página conforme necessário
 
   // Verifica se os cabeçalhos já existem, evitando duplicação
@@ -65,8 +65,9 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
         }
       });
 
-      Logger.log(`Consumindo página ${currentPage}`);
+      // Salva o progresso (número da página atual)
       saveProgress(currentPage);
+
       currentPage++;
 
       // Se a página retornada não tiver pedidos, significa que não há mais dados para processar
