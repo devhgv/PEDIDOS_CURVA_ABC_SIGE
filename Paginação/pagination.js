@@ -2,26 +2,27 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
   let currentPage = getLastPage();  
   const pageSize = 100; // Ajuste o tamanho da página conforme necessário
 
-  // Verifica se os cabeçalhos já existem, evitando duplicação
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(headers);
-    formatHeaders(sheet, headers.length);
-  }
-
   while (true) {
     try {
-      const response = UrlFetchApp.fetch(`${API_BASE_URL}&page=${currentPage}`, params);
+      // Constrói a URL com base na página atual
+      const url = `${API_BASE_URL}&page=${currentPage}`;
+      Logger.log("Requisitando dados da URL: " + url);
+
+      // Faz a requisição
+      const response = UrlFetchApp.fetch(url, params);
       const statusCode = response.getResponseCode();
 
       if (statusCode !== 200) {
         Logger.log(`Erro ao acessar a API: ${statusCode}`);
         Logger.log(`Resposta do servidor: ${response.getContentText()}`);
+        saveProgress(currentPage);
         break;
       }
 
       const responseText = response.getContentText();
       if (!isValidJSONString(responseText)) {
         Logger.log("Resposta não é JSON: " + responseText);
+        saveProgress(currentPage);
         break;
       }
 
@@ -29,9 +30,11 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
 
       if (!pedidos || pedidos.length === 0) {
         Logger.log("Nenhum pedido encontrado.");
+        saveProgress(currentPage);
         break;
       }
 
+      // Processa os dados dos pedidos
       pedidos.forEach((pedido) => {
         if (pedido.Items && Array.isArray(pedido.Items)) {
           pedido.Items.forEach((item) => {
@@ -65,17 +68,25 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
         }
       });
 
-      // Salva o progresso (número da página atual)
+      // Salva o progresso
       saveProgress(currentPage);
-
       currentPage++;
 
-      // Se a página retornada não tiver pedidos, significa que não há mais dados para processar
+      // Condição de parada se não houver mais páginas
       if (pedidos.length < pageSize) {
+        Logger.log("Todos os pedidos processados.");
+        break;
+      }
+
+      // Verifica tempo restante
+      if (Session.getScriptTimeRemaining() < 30) {
+        Logger.log("Tempo quase esgotado. Salvando progresso na página " + currentPage);
+        saveProgress(currentPage);
         break;
       }
     } catch (error) {
       Logger.log("Erro ao buscar os pedidos: " + error.message);
+      saveProgress(currentPage);
       break;
     }
   }
