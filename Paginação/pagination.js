@@ -35,39 +35,43 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
         break;
       }
 
-      // Processa os dados dos pedidos
-      pedidos.forEach((pedido) => {
-        Logger.log("Processando dados dos pedidos (...)");
-        if (pedido.Items && Array.isArray(pedido.Items)) {
-          pedido.Items.forEach((item) => {
-            const itemJson = JSON.stringify(item); // Converte os itens em JSON
-            sheet.appendRow([
-              pedido.ID || "N/A",
-              pedido.DataEnvio || "N/A",
-              pedido.Cliente || "N/A",
-              pedido.ClienteCNPJ || "N/A",
-              itemJson,
-              pedido.Categoria || "N/A",
-              pedido.Empresa || "N/A",
-              pedido.ValorFinal || 0,
-              pedido.StatusSistema || "N/A"
-            ]);
-          });
-        } else {
-          sheet.appendRow([
-            pedido.ID || "N/A",
-            pedido.DataEnvio || "N/A",
-            pedido.Cliente || "N/A",
-            pedido.ClienteCNPJ || "N/A",
-            "Sem Código",
-            "Sem Descrição",
-            pedido.Categoria || "N/A",
-            pedido.Empresa || "N/A",
-            pedido.ValorFinal || 0,
-            pedido.StatusSistema || "N/A"
-          ]);
-        }
-      });
+     // Processa os dados dos pedidos
+pedidos.forEach((pedido) => {
+  Logger.log("Processando dados dos pedidos (...)");
+
+  // Verifica se o pedido tem itens e adiciona linha por linha
+  if (pedido.Items && Array.isArray(pedido.Items) && pedido.Items.length > 0) {
+    pedido.Items.forEach((item) => {
+      const itemJson = JSON.stringify(item); // Converte o item em JSON
+      sheet.appendRow([
+        pedido.ID || "N/A",
+        pedido.DataEnvio || "N/A",
+        pedido.Cliente || "N/A",
+        pedido.ClienteCNPJ || "N/A",
+        itemJson,
+        pedido.Categoria || "N/A",
+        pedido.Empresa || "N/A",
+        pedido.ValorFinal || 0,
+        pedido.StatusSistema || "N/A"
+      ]);
+    });
+  } else {
+    // Adiciona um pedido sem itens
+    sheet.appendRow([
+      pedido.ID || "N/A",
+      pedido.DataEnvio || "N/A",
+      pedido.Cliente || "N/A",
+      pedido.ClienteCNPJ || "N/A",
+      "Sem Código",
+      "Sem Descrição",
+      pedido.Categoria || "N/A",
+      pedido.Empresa || "N/A",
+      pedido.ValorFinal || 0,
+      pedido.StatusSistema || "N/A"
+    ]);
+    Logger.log("Linha adicionada para o pedido sem itens.");
+  }
+});
 
       // Salva o progresso
       Logger.log("Página atual concluída: " + currentPage);

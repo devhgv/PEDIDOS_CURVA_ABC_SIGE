@@ -22,10 +22,13 @@ function fetchAllPedidosFromMiddleware() {
   const headers = ["ID", "DataEnvio", "Cliente", "ClienteCNPJ", "Itens", "Categoria", "Empresa", "ValorFinal", "StatusSistema"];
   
   if (sheet.getLastRow() === 0) {
-    Logger.log("Criando cabeçalhos na Planilha (...)")
-    sheet.appendRow(headers);
-    formatHeaders(sheet, headers.length);
+    Logger.log("Planilha está vazia. Adicionando cabeçalhos...");
+    sheet.appendRow(headers); // Adiciona os cabeçalhos
+    formatHeaders(sheet, headers.length); // Formata os cabeçalhos
+  } else {
+    Logger.log("Planilha já contém dados. Não será necessário recriar os cabeçalhos.");
   }
+  
 
   fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers);
   Logger.log("Importação de pedidos concluída com sucesso!");
