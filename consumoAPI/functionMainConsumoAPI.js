@@ -5,7 +5,7 @@ function fetchAllPedidosFromMiddleware() {
     return;
   }
 
-  const API_BASE_URL = "https://api.sigecloud.com.br/request/Pedidos/GetTodosPedidos";
+  const API_BASE_URL = "https://api.sigecloud.com.br/request/Pedidos/GetTodosPedidos?page=1";
 
   const params = {
     method: "GET",
@@ -19,16 +19,12 @@ function fetchAllPedidosFromMiddleware() {
     muteHttpExceptions: true
   };
 
-  const headers = ["ID", "DataEnvio", "Cliente", "ClienteCNPJ", "Itens", "Categoria", "Empresa", "ValorFinal", "StatusSistema"];
+  const headers = ["ID", "DataEnvio", "Cliente", "ClienteCNPJ", "Codigo", "Descricao", "ValorTotal", "Categoria", "Empresa", "ValorFinal", "StatusSistema"];
   
   if (sheet.getLastRow() === 0) {
-    Logger.log("Planilha está vazia. Adicionando cabeçalhos...");
-    sheet.appendRow(headers); // Adiciona os cabeçalhos
-    formatHeaders(sheet, headers.length); // Formata os cabeçalhos
-  } else {
-    Logger.log("Planilha já contém dados. Não será necessário recriar os cabeçalhos.");
+    sheet.appendRow(headers);
+    formatHeaders(sheet, headers.length);
   }
-  
 
   fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers);
   Logger.log("Importação de pedidos concluída com sucesso!");
@@ -42,6 +38,23 @@ function formatHeaders(sheet, columnCount) {
   sheet.getRange(1, 1, 1, columnCount)
     .setFontWeight("bold")
     .setBackground("#D3D3D3");
+}
+
+function saveProgress(currentPage) {
+  if (currentPage !== undefined && currentPage !== null) {
+    PropertiesService.getScriptProperties().setProperty('LAST_PAGE', currentPage.toString());
+  } else {
+    Logger.log("Erro: currentPage está indefinido ou nulo.");
+  }
+}
+
+function getLastPage() {
+  const lastPage = PropertiesService.getScriptProperties().getProperty('LAST_PAGE');
+  if (lastPage !== null) {
+    return parseInt(lastPage, 10); 
+  } else {
+    return 1;  // Se não houver um valor salvo, começa pela página 1
+  }
 }
 
 function isValidJSONString(str) {
