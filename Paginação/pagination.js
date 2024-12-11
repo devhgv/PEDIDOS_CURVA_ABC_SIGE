@@ -1,8 +1,8 @@
 function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
-  let currentPage = 1; // Página inicial
+  let currentPage = 1; // Página inicial do consumo
   const pageSize = 100; // Tamanho da página, ajustável
 
-  for (; ; currentPage++) { // Incrementa `currentPage` automaticamente em cada iteração
+  for (; ; currentPage++) { // Incrementa `currentPage` (outra página) automaticamente em cada iteração
     try {
       // Constrói a URL com base na página atual
       const url = `${API_BASE_URL}?page=${currentPage}`;

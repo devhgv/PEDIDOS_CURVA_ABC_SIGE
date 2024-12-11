@@ -13,7 +13,7 @@ function getLastPage() {
     Logger.log("Progresso recuperado: Página " + lastPage);
     return Number(lastPage); 
   } else {
-    Logger.log("Nenhum progresso válido encontrado. Começando pela página 1.");
+    Logger.log("Nenhuma sequência de páginas encontrada. Começando pela página 1.");
     return 1; // Valor padrão se não houver progresso salvo ou valor inválido
   }
 }

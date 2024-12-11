@@ -29,7 +29,7 @@ function fetchAllPedidosFromMiddleware() {
 
   // Chamar a função de paginação
   try {
-    Logger.log("Iniciando a importação de pedidos...");
+    Logger.log("Iniciando a importação de pedidos (...)");
     fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers);
     Logger.log("Importação de pedidos concluída com sucesso!");
   } catch (error) {
