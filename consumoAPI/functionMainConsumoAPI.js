@@ -1,7 +1,7 @@
 function fetchAllPedidosFromMiddleware() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const sheet = SpreadsheetApp.getActiveSpreadsheet()?.getActiveSheet();
   if (!sheet) {
-    Logger.log("Erro: Não foi possível obter a planilha ativa.");
+    Logger.log("Erro: Nenhuma planilha ativa encontrada. Verifique se você está usando o script em uma planilha.");
     return;
   }
 
@@ -20,14 +20,21 @@ function fetchAllPedidosFromMiddleware() {
   };
 
   const headers = ["ID", "DataEnvio", "Cliente", "ClienteCNPJ", "Itens", "Categoria", "Empresa", "ValorFinal", "StatusSistema"];
-  
+
+  // Adicionar cabeçalhos se for a primeira vez
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(headers);
     formatHeaders(sheet, headers.length);
   }
 
-  fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers);
-  Logger.log("Importação de pedidos concluída com sucesso!");
+  // Chamar a função de paginação
+  try {
+    Logger.log("Iniciando a importação de pedidos...");
+    fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers);
+    Logger.log("Importação de pedidos concluída com sucesso!");
+  } catch (error) {
+    Logger.log("Erro ao importar pedidos: " + error.message);
+  }
 }
 
 function formatHeaders(sheet, columnCount) {
