@@ -31,25 +31,31 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
         Logger.log("Nenhum pedido encontrado.");
         break;
       }
-
+      
       pedidos.forEach((pedido) => {
+        // Verifica se o pedido tem a propriedade "Items" e é uma array
         if (pedido.Items && Array.isArray(pedido.Items)) {
+          // Para cada item dentro do pedido, insere os dados do item como JSON na planilha
           pedido.Items.forEach((item) => {
+            // Converte o objeto "item" para uma string JSON
+            const itemJson = JSON.stringify(item);  // Transforma o objeto em uma string JSON
+
+            // Agora adiciona esses dados na planilha
             sheet.appendRow([
-              pedido.ID || "N/A",
-              pedido.DataEnvio || "N/A",
-              pedido.Cliente || "N/A",
-              pedido.ClienteCNPJ || "N/A",
-              item.Codigo || "N/A",
-              item.Descricao || "N/A",
-              item.ValorTotal || 0,
-              pedido.Categoria || "N/A",
-              pedido.Empresa || "N/A",
-              pedido.ValorFinal || 0,
+              pedido.ID || "N/A", 
+              pedido.DataEnvio || "N/A", 
+              pedido.Cliente || "N/A", 
+              pedido.ClienteCNPJ || "N/A", 
+              itemJson,  // A célula com o objeto item em formato JSON
+              pedido.ValorTotal || 0, 
+              pedido.Categoria || "N/A", 
+              pedido.Empresa || "N/A", 
+              pedido.ValorFinal || 0, 
               pedido.StatusSistema || "N/A"
             ]);
           });
         } else {
+          // Caso não existam itens, adiciona uma linha com dados básicos
           sheet.appendRow([
             pedido.ID || "N/A",
             pedido.DataEnvio || "N/A",
