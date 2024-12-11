@@ -23,6 +23,7 @@ function fetchAllPedidosFromMiddleware() {
 
   // Adicionar cabeçalhos se for a primeira vez
   if (sheet.getLastRow() === 0) {
+    Logger.log("Cabeçalhos sendo incluídos (...)")
     sheet.appendRow(headers);
     formatHeaders(sheet, headers.length);
   }
