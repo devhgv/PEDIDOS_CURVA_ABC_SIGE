@@ -1,4 +1,5 @@
 function fetchAllPedidosFromMiddleware() {
+  
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   if (!sheet) {
     Logger.log("Erro: Não foi possível obter a planilha ativa.");

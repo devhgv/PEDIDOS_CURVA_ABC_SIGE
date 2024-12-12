@@ -1,6 +1,6 @@
 function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
-  let currentPage = getLastPage();  // Obtém a última página salva
-  let currentRow = getLastRow();  // Obtém a última linha salva
+  let currentPage = getLastPage(); // Obtém a última página salva
+  let currentRow = getLastRow(); // Obtém a última linha salva
 
   while (true) {
     try {
@@ -27,40 +27,24 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
         break;
       }
 
-      const data = pedidos.flatMap(pedido => {
-        if (pedido.Items && Array.isArray(pedido.Items)) {
-          return pedido.Items.map(item => [
-            pedido.ID || "N/A",
-            pedido.DataEnvio || "N/A",
-            pedido.Cliente || "N/A",
-            pedido.ClienteCNPJ || "N/A",
-            JSON.stringify(item),
-            pedido.Categoria || "N/A",
-            pedido.Empresa || "N/A",
-            pedido.ValorFinal || 0,
-            pedido.StatusSistema || "N/A"
-          ]);
-        } else {
-          return [[
-            pedido.ID || "N/A",
-            pedido.DataEnvio || "N/A",
-            pedido.Cliente || "N/A",
-            pedido.ClienteCNPJ || "N/A",
-            "Sem Código",
-            pedido.Categoria || "N/A",
-            pedido.Empresa || "N/A",
-            pedido.ValorFinal || 0,
-            pedido.StatusSistema || "N/A"
-          ]];
-        }
-      });
+      const data = pedidos.map(pedido => [
+        pedido.ID || "N/A",
+        pedido.DataEnvio || "N/A",
+        pedido.Cliente || "N/A",
+        pedido.ClienteCNPJ || "N/A",
+        JSON.stringify(pedido.Items || []), // Insere todos os itens como um único JSON
+        pedido.Categoria || "N/A",
+        pedido.Empresa || "N/A",
+        pedido.ValorFinal || 0,
+        pedido.StatusSistema || "N/A"
+      ]);
 
       sheet.getRange(currentRow, 1, data.length, headers.length).setValues(data);
       currentRow += data.length;
 
       saveProgress(currentPage, currentRow);
 
-      if (pedidos.length < 1) {
+      if (pedidos.length < 100) { // Verifica se a página retornou menos de 100 pedidos
         Logger.log("Paginação concluída. Todos os dados foram processados.");
         break;
       }

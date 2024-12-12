@@ -1,4 +1,3 @@
 function main() {
   fetchAllPedidosFromMiddleware(); 
-  onOpen(); 
 }
