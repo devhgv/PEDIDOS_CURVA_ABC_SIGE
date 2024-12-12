@@ -5,7 +5,8 @@ function fetchAllPedidosFromMiddleware() {
     return;
   }
 
-  const API_BASE_URL = "https://api.sigecloud.com.br/request/Pedidos/GetTodosPedidos?page=1";
+  Logger.log("Criando cabeçalhos na planilha(...)");
+  const API_BASE_URL = "https://api.sigecloud.com.br/request/Pedidos/GetTodosPedidos";
 
   const params = {
     method: "GET",
@@ -20,12 +21,13 @@ function fetchAllPedidosFromMiddleware() {
   };
 
   const headers = ["ID", "DataEnvio", "Cliente", "ClienteCNPJ", "Itens", "Categoria", "Empresa", "ValorFinal", "StatusSistema"];
-  
-  if (sheet.getLastRow() === 0) {
+
+  if (!sheet.getRange(1, 1, 1, headers.length).getValues()[0].some(val => val)) {
     sheet.appendRow(headers);
     formatHeaders(sheet, headers.length);
   }
 
+  Logger.log("Buscando dados dos pedidos com paginação...");
   fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers);
   Logger.log("Importação de pedidos concluída com sucesso!");
 }
@@ -38,11 +40,14 @@ function formatHeaders(sheet, columnCount) {
   sheet.getRange(1, 1, 1, columnCount)
     .setFontWeight("bold")
     .setBackground("#D3D3D3");
+  Logger.log("Cabeçalhos formatados com fundo cinza e texto em negrito.");
 }
 
-function saveProgress(currentPage) {
+function saveProgress(currentPage, currentRow) {
   if (currentPage !== undefined && currentPage !== null) {
     PropertiesService.getScriptProperties().setProperty('LAST_PAGE', currentPage.toString());
+    PropertiesService.getScriptProperties().setProperty('LAST_ROW', currentRow.toString());
+    Logger.log(`Progresso salvo: Página ${currentPage}, Linha ${currentRow}`);
   } else {
     Logger.log("Erro: currentPage está indefinido ou nulo.");
   }
@@ -50,11 +55,12 @@ function saveProgress(currentPage) {
 
 function getLastPage() {
   const lastPage = PropertiesService.getScriptProperties().getProperty('LAST_PAGE');
-  if (lastPage !== null) {
-    return parseInt(lastPage, 10); 
-  } else {
-    return 1;  // Se não houver um valor salvo, começa pela página 1
-  }
+  return lastPage ? parseInt(lastPage, 10) : 1;
+}
+
+function getLastRow() {
+  const lastRow = PropertiesService.getScriptProperties().getProperty('LAST_ROW');
+  return lastRow ? parseInt(lastRow, 10) : 2; // Linha 2, assumindo cabeçalhos na 1
 }
 
 function isValidJSONString(str) {
