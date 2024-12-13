@@ -72,3 +72,4 @@ function isValidJSONString(str) {
     return false;
   }
 }
+

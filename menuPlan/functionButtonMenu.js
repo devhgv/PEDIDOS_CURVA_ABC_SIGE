@@ -22,3 +22,4 @@ function showAbout() {
   `;
   ui.alert('Sobre o Sistema:', message, ui.ButtonSet.OK);
 }
+

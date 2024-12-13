@@ -58,3 +58,4 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
 
   sheet.autoResizeColumns(1, headers.length);
 }
+
