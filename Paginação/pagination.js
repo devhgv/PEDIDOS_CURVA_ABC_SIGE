@@ -32,7 +32,7 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
         pedido.DataEnvio || "N/A",
         pedido.Cliente || "N/A",
         pedido.ClienteCNPJ || "N/A",
-        JSON.stringify(pedido.Items || []), // Insere todos os itens como um único JSON
+        JSON.stringify(pedido.Items || []), 
         pedido.Categoria || "N/A",
         pedido.Empresa || "N/A",
         pedido.ValorFinal || 0,
