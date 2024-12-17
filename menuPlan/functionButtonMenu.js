@@ -1,16 +1,21 @@
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
+
   ui.createMenu('Consumo de API') 
     .addItem('Iniciar/ Continuar Consumo API', 'updatePedidos')  
-    .addItem('Sobre', 'showAbout')  
+    .addItem('Sobre', 'showAboutAPI')  
+    .addToUi();
+
+  ui.createMenu('Curva ABC')   
+    .addItem('Funcionamento', 'showAboutCurva')  
     .addToUi();
 }
 
 function updatePedidos() {
-  fetchAllPedidosFromMiddleware();
+  fetchAllPedidosFromMiddleware(); // Substitua pela sua função real
 }
 
-function showAbout() {
+function showAboutAPI() {
   const ui = SpreadsheetApp.getUi();
   const message = `
     Este módulo consome dados da API de pedidos da Portoreal.
@@ -23,3 +28,18 @@ function showAbout() {
   ui.alert('Sobre o Sistema:', message, ui.ButtonSet.OK);
 }
 
+function showAboutCurva() {
+  const ui = SpreadsheetApp.getUi();
+  const message = `
+    Nessa aba consta a Curva ABC/ ABCD de itens da Portoreal.
+
+    Funcionamento:
+
+    1. Ler os dados JSON da coluna "ItensJson";
+    2. Filtra os pedidos pelo campo "StatusSistema" (coluna J) que estejam como "Pedido Faturado";
+    3. Soma a quantidade dos itens por "Descricao" (campo do JSON), agrupando os dados sem duplicidade;
+    4. Permite filtrar os dados por um período (3, 6, 12, 18, 24 meses) com base na coluna "DataFaturada" (coluna C);
+    5. Insere os resultados na aba "Itens x Curva ABC/ABCD (qtd)", ordenando os itens pela quantidade total (do maior para o menor).
+  `;
+  ui.alert('Sobre a Curva:', message, ui.ButtonSet.OK);
+}
