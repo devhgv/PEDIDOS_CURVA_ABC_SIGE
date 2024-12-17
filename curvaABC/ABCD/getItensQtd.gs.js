@@ -1,79 +1,75 @@
-function generateABCItems() {
-  const ui = SpreadsheetApp.getUi();
+function consolidarItensQtd() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const pedidosSheet = ss.getSheetByName("Pedidos");
+  const itensSheet = ss.getSheetByName("Base Itens x Curva ABC/ ABCD (qtd)");
 
-  const sheetPedidos = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Pedidos");
-  const sheetABC = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Itens x Curva ABC/ ABCD (qtd)");
+  // Limpa a aba de itens antes de atualizar os dados
+  itensSheet.clearContents();
+  itensSheet.appendRow(["Data Faturada", "Descrição", "Quantidade Vendida"]);
 
-  // Limpa a aba "Itens x Curva ABC/ ABCD (qtd)"
-  sheetABC.clearContents();
+  // Define os índices das colunas
+  const colDataFaturada = 2; // Coluna C
+  const colItensJson = 5; // Coluna F
+  const colStatusSistema = 9; // Coluna J
 
-  // Configura cabeçalhos
-  sheetABC.appendRow(["Descrição", "Quantidade Total"]);
+  const data = pedidosSheet.getDataRange().getValues();
 
-  // Filtro de tempo: meses (valor fixo ou parametrizado)
-  const monthsBack = 6; // Altere este valor conforme necessário
-  const dateLimit = new Date();
-  dateLimit.setMonth(dateLimit.getMonth() - monthsBack);
+  const mesesFiltro = ""; // Adicione o número de meses.
+  const hoje = new Date();
+  const dataLimite = new Date(hoje.setMonth(hoje.getMonth() - mesesFiltro));
 
-  // Mapeamento para somar Quantidades por Descrição
-  const quantityMap = {};
+  const consolidado = {}; // Objeto para consolidar a soma de quantidades por descrição
 
-  // Lê todos os dados da aba Pedidos
-  const pedidosData = sheetPedidos.getDataRange().getValues();
+  // Itera sobre as linhas, ignorando o cabeçalho
+  for (let i = 1; i < data.length; i++) {
+    const statusSistema = data[i][colStatusSistema];
+    const dataFaturadaStr = data[i][colDataFaturada];
+    const itensJson = data[i][colItensJson];
 
-  // Índices das colunas
-  const idxDataFaturada = 2; // Coluna C
-  const idxItensJson = 5; // Coluna F
-  const idxStatus = 9; // Coluna J
+    // Converte a data de string "DD/MM/AAAA" para objeto Date
+    const partesData = dataFaturadaStr.split("/");
+    const dataFaturada = new Date(partesData[2], partesData[1] - 1, partesData[0]);
 
-  for (let i = 1; i < pedidosData.length; i++) {
-    const status = pedidosData[i][idxStatus];
-    const dataFaturada = pedidosData[i][idxDataFaturada];
-    const itensJson = pedidosData[i][idxItensJson];
+    // Aplica filtro de data e status "Pedido Faturado"
+    if (dataFaturada >= dataLimite && statusSistema === "Pedido Faturado" && isValidJson(itensJson)) {
+      const itens = JSON.parse(itensJson);
 
-    // Filtra pedidos "Faturados" dentro do período
-    if (status === "Pedido Faturado" && isDateWithinLimit(dataFaturada, dateLimit)) {
-      try {
-        const itens = JSON.parse(itensJson); // Parseia os itens JSON
+      // Itera sobre os itens do JSON
+      itens.forEach(item => {
+        const descricao = item.Descricao; // Ajuste para o campo correto "Descricao"
+        const quantidade = parseFloat(item.Quantidade) || 0;
 
-        itens.forEach(item => {
-          const descricao = item.Descricao || "Sem Descrição";
-          const quantidade = parseFloat(item.Quantidade) || 0;
-
-          // Soma a quantidade por Descrição
-          if (!quantityMap[descricao]) {
-            quantityMap[descricao] = 0;
+        if (descricao) {
+          // Agrupa as quantidades por descrição
+          if (!consolidado[descricao]) {
+            consolidado[descricao] = { quantidade: 0, dataFaturada: dataFaturadaStr };
           }
-          quantityMap[descricao] += quantidade;
-        });
-      } catch (e) {
-        Logger.log("Erro ao processar JSON: " + e.message);
-      }
+          consolidado[descricao].quantidade += quantidade;
+        }
+      });
     }
   }
 
-  // Ordena os itens pelo total de quantidade (decrescente)
-  const sortedItems = Object.entries(quantityMap).sort((a, b) => b[1] - a[1]);
+  // Constrói os dados para inserção na planilha
+  const output = Object.entries(consolidado).map(([descricao, dados]) => [
+    dados.dataFaturada, descricao, dados.quantidade
+  ]);
 
-  // Insere os dados na aba ABC
-  sortedItems.forEach(([descricao, quantidade]) => {
-    sheetABC.appendRow([descricao, quantidade]);
-  });
-
-  // Alerta final (somente em contexto interativo)
-  try {
-    ui.alert(`Curva ABC gerada com sucesso para os últimos ${monthsBack} meses!`);
-  } catch (e) {
-    Logger.log(`Curva ABC gerada com sucesso para os últimos ${monthsBack} meses!`);
+  if (output.length > 0) {
+    itensSheet.getRange(2, 1, output.length, 3).setValues(output);
+  } else {
+    itensSheet.appendRow(["Não há dados para o período selecionado."]);
   }
+
+  Logger.log("Consolidação concluída com sucesso!");
 }
 
-// auxilia para validar datas dentro do período.
-
-function isDateWithinLimit(dataFaturada, dateLimit) {
-  const dateParts = dataFaturada.split("/");
-  if (dateParts.length !== 3) return false;
-
-  const date = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`); // Formato "yyyy-MM-dd"
-  return date >= dateLimit;
+//Validação do JSON
+function isValidJson(str) {
+  try {
+    JSON.parse(str);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }

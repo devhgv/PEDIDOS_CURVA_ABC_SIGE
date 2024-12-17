@@ -1,7 +1,7 @@
 function consolidarItens() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const pedidosSheet = ss.getSheetByName("Pedidos");
-  const itensSheet = ss.getSheetByName("Itens");
+  const itensSheet = ss.getSheetByName("Itens x Curva ABC/ ABCD ($)");
 
   // Limpa a aba "Itens" para atualizar os dados
   itensSheet.clearContents();
@@ -43,7 +43,7 @@ function consolidarItens() {
   Logger.log("Consolidação concluída com sucesso!");
 }
 
-//Valida se uma string é um JSON válido
+//Validação do JSON
 function isValidJson(str) { 
   try {
     JSON.parse(str);

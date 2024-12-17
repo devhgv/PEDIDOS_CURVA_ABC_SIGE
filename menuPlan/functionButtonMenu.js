@@ -12,7 +12,7 @@ function onOpen() {
 }
 
 function updatePedidos() {
-  fetchAllPedidosFromMiddleware(); // Substitua pela sua função real
+  fetchAllPedidosFromMiddleware(); 
 }
 
 function showAboutAPI() {
@@ -35,10 +35,10 @@ function showAboutCurva() {
 
     Funcionamento:
 
-    1. Ler os dados JSON da coluna "ItensJson";
+    1. Ler os dados JSON da coluna "ItensJson" da aba Pedidos;
     2. Filtra os pedidos pelo campo "StatusSistema" (coluna J) que estejam como "Pedido Faturado";
     3. Soma a quantidade dos itens por "Descricao" (campo do JSON), agrupando os dados sem duplicidade;
-    4. Permite filtrar os dados por um período (3, 6, 12, 18, 24 meses) com base na coluna "DataFaturada" (coluna C);
+    4. Permite filtrar os dados por um período (3, 6, 12, 18, 24 meses) com base na coluna "DataFaturada" (coluna C) da aba Pedidos;
     5. Insere os resultados na aba "Itens x Curva ABC/ABCD (qtd)", ordenando os itens pela quantidade total (do maior para o menor).
   `;
   ui.alert('Sobre a Curva:', message, ui.ButtonSet.OK);
