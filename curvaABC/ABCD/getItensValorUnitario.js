@@ -1,7 +1,7 @@
 function consolidarItens() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const pedidosSheet = ss.getSheetByName("Pedidos");
-  const itensSheet = ss.getSheetByName("Itens x Curva ABC/ ABCD ($)");
+  const itensSheet = ss.getSheetByName("Curva ABC/ ABCD ($)");
 
   // Limpa a aba "Itens" para atualizar os dados
   itensSheet.clearContents();

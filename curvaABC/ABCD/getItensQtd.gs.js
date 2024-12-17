@@ -1,7 +1,7 @@
 function consolidarItensQtd() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const pedidosSheet = ss.getSheetByName("Pedidos");
-  const itensSheet = ss.getSheetByName("Base Itens x Curva ABC/ ABCD (qtd)");
+  const itensSheet = ss.getSheetByName("Curva ABC/ ABCD (qtd)");
 
   // Limpa a aba de itens antes de atualizar os dados
   itensSheet.clearContents();
