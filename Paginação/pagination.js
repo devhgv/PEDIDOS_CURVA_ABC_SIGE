@@ -44,7 +44,7 @@ function fetchPedidosWithPagination(API_BASE_URL, params, sheet, headers) {
 
       saveProgress(currentPage, currentRow);
 
-      if (pedidos.length < 100) { // Verifica se a página retornou menos de 100 pedidos
+      if (pedidos.length < 100) { // Verifica se a página retornou menos de 100 pedidos, pode ser alterado.
         Logger.log("Paginação concluída. Todos os dados foram processados.");
         break;
       }

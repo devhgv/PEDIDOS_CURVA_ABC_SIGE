@@ -43,7 +43,7 @@ function consolidarItens() {
   Logger.log("Consolidação concluída com sucesso!");
 }
 
-//Validação do JSON
+//Validação do JSOn
 function isValidJson(str) { 
   try {
     JSON.parse(str);

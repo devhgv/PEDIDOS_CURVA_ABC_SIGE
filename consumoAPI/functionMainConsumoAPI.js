@@ -5,7 +5,7 @@ function fetchAllPedidosFromMiddleware() {
     Logger.log("Erro: Não foi possível obter a planilha ativa.");
     return;
   }
-
+// Conecta-se com a API do SIGE
   Logger.log("Criando cabeçalhos na planilha(...)");
   const API_BASE_URL = "https://api.sigecloud.com.br/request/Pedidos/GetTodosPedidos";
 

@@ -1,4 +1,4 @@
-function onOpen() {
+function onOpen() { // Criação dos Menus para suporte 
   const ui = SpreadsheetApp.getUi();
 
   ui.createMenu('Consumo de API') 

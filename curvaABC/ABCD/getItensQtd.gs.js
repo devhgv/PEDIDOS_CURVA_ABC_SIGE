@@ -7,7 +7,7 @@ function consolidarItensQtd() {
   itensSheet.clearContents();
   itensSheet.appendRow(["Data Faturada", "Descrição", "Quantidade Vendida"]);
 
-  // Define os índices das colunas
+
   const colDataFaturada = 2; // Coluna C
   const colItensJson = 5; // Coluna F
   const colStatusSistema = 9; // Coluna J
@@ -18,7 +18,7 @@ function consolidarItensQtd() {
   const hoje = new Date();
   const dataLimite = new Date(hoje.setMonth(hoje.getMonth() - mesesFiltro));
 
-  const consolidado = {}; // Objeto para consolidar a soma de quantidades por descrição
+  const consolidado = {}; 
 
   // Itera sobre as linhas, ignorando o cabeçalho
   for (let i = 1; i < data.length; i++) {
@@ -34,7 +34,6 @@ function consolidarItensQtd() {
     if (dataFaturada >= dataLimite && statusSistema === "Pedido Faturado" && isValidJson(itensJson)) {
       const itens = JSON.parse(itensJson);
 
-      // Itera sobre os itens do JSON
       itens.forEach(item => {
         const descricao = item.Descricao; // Ajuste para o campo correto "Descricao"
         const quantidade = parseFloat(item.Quantidade) || 0;
