@@ -73,9 +73,9 @@ function updateVerification() {
 
   // Adiciona o cabeçalho "ultima_atualização_de_dados" na última coluna, se ainda não existir
   const lastColumn = sheet.getLastColumn();
-  if (sheet.getRange(1, lastColumn).getValue() !== "ultima_atualização_de_dados") {
-    sheet.getRange(1, lastColumn + 1).setValue("ultima_atualização_de_dados");
-    sheet.getRange(1, lastColumn + 1).setFontWeight("bold").setBackground("#808080").setFontColor("#000000");
+  if (sheet.getRange(1, lastColumn).getValue() !== "ultimaAtualizacaoDados") {
+    sheet.getRange(1, lastColumn + 1).setValue("ultimaAtualizacaoDados");
+    sheet.getRange(1, lastColumn + 1).setFontWeight("bold").setBackground("#D3D3D3").setFontColor("#000000");
   }
 
   // Insere a data e hora da última atualização na coluna de "ultima_atualização_de_dados"

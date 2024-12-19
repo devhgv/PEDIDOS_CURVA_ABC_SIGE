@@ -2,8 +2,9 @@ function onOpen() {
   const ui = SpreadsheetApp.getUi();
 
   ui.createMenu('Consumo de API')
+    .addItem('Funcionamento', 'showAboutAPI')
+    .addSeparator() 
     .addItem('Iniciar/ Continuar Consumo API', 'updatePedidos')
-    .addItem('Sobre', 'showAboutAPI')
     .addToUi();
 
   const curvaABCMenu = ui.createMenu('Curva ABC')
@@ -16,6 +17,12 @@ function onOpen() {
     .addItem('24 meses', 'curvaABC24Meses');
   
   curvaABCMenu.addToUi();
+
+  const menuModal = ui.createMenu('APP') 
+    .addItem('Acessar App', 'showPedidosSidebar') // Item de menu e função associada
+    .addToUi();
+
+  menuModal.addToUi();
 }
 
 
