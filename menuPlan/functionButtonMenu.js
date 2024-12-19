@@ -1,15 +1,23 @@
-function onOpen() { // Criação dos Menus para suporte 
+function onOpen() {
   const ui = SpreadsheetApp.getUi();
 
-  ui.createMenu('Consumo de API') 
-    .addItem('Iniciar/ Continuar Consumo API', 'updatePedidos')  
-    .addItem('Sobre', 'showAboutAPI')  
+  ui.createMenu('Consumo de API')
+    .addItem('Iniciar/ Continuar Consumo API', 'updatePedidos')
+    .addItem('Sobre', 'showAboutAPI')
     .addToUi();
 
-  ui.createMenu('Curva ABC')   
-    .addItem('Funcionamento', 'showAboutCurva')  
-    .addToUi();
+  const curvaABCMenu = ui.createMenu('Curva ABC')
+    .addItem('Funcionamento', 'showAboutCurva')
+    .addSeparator() 
+    .addItem('3 meses', 'curvaABC3Meses')
+    .addItem('6 meses', 'curvaABC6Meses')
+    .addItem('12 meses', 'curvaABC12Meses')
+    .addItem('18 meses', 'curvaABC18Meses')
+    .addItem('24 meses', 'curvaABC24Meses');
+  
+  curvaABCMenu.addToUi();
 }
+
 
 function updatePedidos() {
   fetchAllPedidosFromMiddleware(); 
