@@ -64,6 +64,29 @@ function getLastRow() {
   return lastRow ? parseInt(lastRow, 10) : 2; // Linha 2, assumindo cabeçalhos na 1
 }
 
+function updateVerification() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Pedidos");
+  if (!sheet) {
+    Logger.log("Erro: Não foi possível obter a planilha 'Pedidos'.");
+    return;
+  }
+
+  // Adiciona o cabeçalho "ultima_atualização_de_dados" na última coluna, se ainda não existir
+  const lastColumn = sheet.getLastColumn();
+  if (sheet.getRange(1, lastColumn).getValue() !== "ultima_atualização_de_dados") {
+    sheet.getRange(1, lastColumn + 1).setValue("ultima_atualização_de_dados");
+    sheet.getRange(1, lastColumn + 1).setFontWeight("bold").setBackground("#808080").setFontColor("#000000");
+  }
+
+  // Insere a data e hora da última atualização na coluna de "ultima_atualização_de_dados"
+  const dataAtualizacao = new Date();
+  const totalLinhas = sheet.getLastRow();
+  for (let i = 2; i <= totalLinhas; i++) {
+    sheet.getRange(i, lastColumn + 1).setValue(dataAtualizacao);
+  }
+  Logger.log("Data e hora da última atualização inseridas na planilha.");
+}
+
 function isValidJSONString(str) {
   try {
     JSON.parse(str);
