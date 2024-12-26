@@ -28,7 +28,7 @@ function showAboutAPI() {
   - Na última coluna, adiciona data/hora da atualização de consumo dos dados inseridos na planilha;
   - Os scripts foram criados para salvar o progresso e retomar de onde parou, para evitar duplicidade no consumo das páginas da API;
   - Para lidar com o tempo limite de execução do Google Apps Script (6 minutos), foi adicionado uma função para encerrar a execução automaticamente depois de 5 minutos, para maior controle da paginação;
-  - Essa aplicação roda automaticamente através de um acionador GAS todos os sábados das 16h às 17h. 
+  - Essa aplicação roda automaticamente através de um acionador (GAS) todos os sábados das 16h às 17h. 
 
   Obs: Na coluna ItensJSON, consta todos os Itens de um único pedido por fornecedor, isso alimentará as Curvas ABC/ ABCD deste módulo.  
   `;
@@ -47,7 +47,7 @@ function showAboutCurve() {
   - Essa aplicação funciona em conjunto à aplicação de paginação da API;
   - Após atualização de dados de pedidos da API-SIGE, ela atualiza as Curvas ABC com novos dados;
   - Essa aplicação foi criada para apoio na tomada de decisão;
-  - Essa aplicação roda automaticamente através de um acionador GAS todos os sábados das 18h às 19h. 
+  - Essa aplicação roda automaticamente através de um acionador (GAS) todos os sábados das 18h às 19h. 
   `;
 ui.alert ('Sobre o Módulo:', message, ui.ButtonSet.OK);
 }
