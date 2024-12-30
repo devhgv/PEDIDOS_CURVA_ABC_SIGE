@@ -1,5 +1,5 @@
 // FUNÇÃO PRINCIPAL PARA RODAR O CONSUMO E PAGINAÇÃO DA API.
-function runAPIProcess() { //- Essa função roda automaticamente através de um acionador GAS todos os sábados das 16h às 17h. 
+function runAPIProcess() { // Essa função roda automaticamente através de um acionador GAS todos as sextas das 18h às 19h. 
   try {
     Logger.log ("Iniciando o processo de consumo da API (...)");
 
@@ -33,7 +33,7 @@ Logger.log ("Processo concluído com sucesso!");
   }
 }
 
-function updateAllCurveABC () { //- Essa função roda automaticamente através de um acionador GAS todos os sábados das 18h às 19h. 
+function updateAllCurveABC () { // Essa função roda automaticamente através de um acionador GAS todos os sábados das 18h às 19h. 
   Logger.log ("Atualizando Curva ABC dos últimos 3 Meses (...)");
   createCurve3Month();
   Logger.log ("Atualizando Curva ABC dos últimos 6 Meses (...)");
@@ -42,8 +42,10 @@ function updateAllCurveABC () { //- Essa função roda automaticamente através 
   createCurve12Month();
   Logger.log ("Atualizando Curva ABC dos últimos 18 Meses (...)");
   createCurve18Month();
+}
+
+function updateAllCurveABC_2 () { // Essa função roda automaticamente através de um acionador GAS todos os sábados das 19h às 20h apenas a curva ABC 24 meses. 
   Logger.log ("Atualizando Curva ABC dos últimos 24 Meses (...)");
   createCurve24Month();
   Logger.log ("Todas as Curvas ABC foram atualizadas!")
 }
-
